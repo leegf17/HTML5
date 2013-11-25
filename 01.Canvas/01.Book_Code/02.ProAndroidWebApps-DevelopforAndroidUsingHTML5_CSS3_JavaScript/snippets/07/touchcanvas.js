@@ -1,7 +1,7 @@
 (function() {
     var canvas = null,
         context = null;
-    
+
     function resetCanvas() {
         canvas = document.getElementById("simple");
 
@@ -16,9 +16,10 @@
     $(window).bind("resize", resetCanvas).bind("reorient", resetCanvas);
 
     $(document).ready(function() {
+
         window.scrollTo(0, 1);
         resetCanvas();
-        
+
         document.body.addEventListener("touchstart", function(evt) {
             context.beginPath();
             context.moveTo(evt.touches[0].pageX, evt.touches[0].pageY);
