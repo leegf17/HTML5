@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ja"> 
+<head>
+<meta charset="UTF-8" />
+<title>Canvas transform() demo - using jQuery for UI</title>
+<link type="text/css" href="style.css" rel="stylesheet" />
+<link type="text/css" href="jquery/development-bundle/themes/base/ui.all.css" rel="stylesheet" />
+<script src="jquery/js/jquery-1.3.2.min.js"></script>
+<script src="jquery/js/jquery-ui-1.7.2.custom.min.js"></script>
+<script>
+(function () {
+
+var canvas = null;
+var ctx = null;
+var w = 0;
+var h = 0;
+
+$(function() {
+	$("#m11").slider({ min:-2, max:2, step:0.1, value:1, slide:draw, change:draw });
+	$("#m12").slider({ min:-2, max:2, step:0.1, value:0, slide:draw, change:draw });
+	$("#m21").slider({ min:-2, max:2, step:0.1, value:0, slide:draw, change:draw });
+	$("#m22").slider({ min:-2, max:2, step:0.1, value:1, slide:draw, change:draw });
+	$("#dx").slider({ min:-300, max:300, step:1, value:0, slide:draw, change:draw });
+	$("#dy").slider({ min:-300, max:300, step:1, value:0, slide:draw, change:draw });
+	$("#reset").bind("click", reset);
+	canvas = document.getElementById("canvas");
+	w = parseInt(canvas.width);
+	h = parseInt(canvas.height);
+	ctx = canvas.getContext('2d');
+	draw();
+});
+
+function draw() {
+	var keys = ["m11", "m12", "m21", "m22", "dx", "dy"];
+	var p = {};
+	for( var i=0; i<6; i++ ) {
+		var k = keys[i];
+		var v = $("#"+k).slider('value');
+		$("#"+k+"v").text(v);
+		p[k] = v;
+	}
+	ctx.save();
+	ctx.clearRect(-w*2, -h*2, w*4, h*4);
+	ctx.setTransform(p.m11, p.m12, p.m21, p.m22, p.dx, p.dy);
+	// マス目のグラデーション
+	var grad  = ctx.createLinearGradient(0,0, 0,h);
+	grad.addColorStop(0,'rgb(192, 80, 77)');    // 赤
+	grad.addColorStop(0.5,'rgb(155, 187, 89)'); // 緑
+	grad.addColorStop(1,'rgb(128, 100, 162)');  // 紫
+	ctx.fillStyle = grad;
+	ctx.fillRect(0, 0, w, h);
+	// マス目を描画
+	var cw = parseInt(w/10);
+	ctx.lineWidth = 1;
+	for( var i=0; i<parseInt(w/cw); i++ ) {
+		var x = cw * i;
+		ctx.beginPath();
+		ctx.moveTo(x, 0);
+		ctx.lineTo(x, h);
+		ctx.stroke();
+	}
+	for( var i=0; i<parseInt(h/cw); i++ ) {
+		var y = cw * i;
+		ctx.beginPath();
+		ctx.moveTo(0, y);
+		ctx.lineTo(w, y)
+		ctx.stroke();
+	}
+	ctx.lineWidth = 3;
+	ctx.strokeRect(0, 0, w, h);
+	//
+	ctx.restore();
+}
+
+function reset() {
+	$("#m11").slider("value", 1);
+	$("#m12").slider("value", 0);
+	$("#m21").slider("value", 0);
+	$("#m22").slider("value", 1);
+	$("#dx").slider("value", 0);
+	$("#dy").slider("value", 0);
+	draw();
+}
+
+})();
+</script>
+
+</head>
+<body>
+
+<h1>Canvas setTransform() demo - using jQuery for UI</h1>
+<p>This demo will work in Opera 10+, Safari4+, Chrome 3+, Firefox 3.5+.</p>
+<div id="box2">
+<p class="code">ctx.setTransform(<p>
+<div id="frm">
+ <p>
+  <span class="arg">m11</span>
+  <div id="m11" class="slider"></div>
+  <span id="m11v" class="v"></span>
+ </p>
+ <p>
+  <span class="arg">m12</span>
+  <div id="m12" class="slider"></div>
+  <span id="m12v" class="v"></span>
+ </p>
+ <p>
+  <span class="arg">m21</span>
+  <div id="m21" class="slider"></div>
+  <span id="m21v" class="v"></span>
+ </p>
+ <p>
+  <span class="arg">m22</span>
+  <div id="m22" class="slider"></div>
+  <span id="m22v" class="v"></span>
+ </p>
+ <p>
+  <span class="arg">dx</span>
+  <div id="dx" class="slider"></div>
+  <span id="dxv" class="v"></span>
+ </p>
+ <p>
+  <span class="arg">dy</span>
+  <div id="dy" class="slider"></div>
+  <span id="dyv" class="v"></span>
+ </p>
+</div>
+<p class="code">)</p>
+<p><input type="button" value="reset" id="reset"/></p>
+</div>
+
+<div id="box3">
+ <h2>Canvas</h2>
+ <p><canvas id="canvas" width="300" height="300" style="border:1px solid"></canvas></p>
+</div>
+
+</body>
+</html>

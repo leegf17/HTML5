@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<style>
+#a_canvas {
+	border:1px solid black;
+}
+</style>
+</head><body>
+<canvas id="a_canvas" width="300" height="300"></canvas>
+<script type="text/javascript">
+  var canvas = document.getElementById("a_canvas");
+  var context = canvas.getContext("2d");
+  // 记录圆球的状态
+  var ball = {x:10, y:100, dir_x:5, dir_y:5};
+  // 动画
+  setInterval(drawBall, 100);
+  function drawBall() {
+    // 绘制背景
+    context.fillStyle = "white";
+    context.fillRect(0,0,300,300);
+    // 绘制圆球
+    context.beginPath();
+    context.arc(ball.x, ball.y, 5, 0, 2*Math.PI,true);
+    context.fillStyle = "red";
+    context.fill();
+    // 让圆球运动起来
+    ball.x += ball.dir_x;
+    ball.y += ball.dir_y;
+    if (ball.x < 0 || ball.x > 300) { ball.dir_x *= -1; }
+    if (ball.y < 0 || ball.y > 300) { ball.dir_y *= -1; }
+  }
+</script>
+</body></html>

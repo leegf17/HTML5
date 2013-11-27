@@ -1,0 +1,123 @@
+<!DOCTYPE html><html lang="zh"> <head><meta charset="UTF-8" />
+<title>像素处理实例</title>
+<style>
+body {
+ font-family:宋体,Arial,Helvetica,sans-serif;
+ font-size: 80%;
+}
+#dp {
+ width: 200px;
+ min-height: 70px;
+ border:1px solid #000000;
+ background-color: #eeeeee;
+ padding:1em;
+ margin:2em;
+}
+#dp img {
+	margin-right: 1em;
+}
+</style>
+<script>
+(function () {
+
+// 拖动区域的div元素
+var dp = null;
+// FileReader接口对象
+var reader = null;
+
+/* -------------------------------------------------------------------
+* 页面导入时的处理
+* ----------------------------------------------------------------- */
+window.addEventListener("load", function() {
+	// 拖动区域的div元素
+	dp = document.getElementById("dp");
+	// 设置dragover事件的事件侦听
+	dp.addEventListener("dragover", function(evt) {
+		evt.preventDefault();
+	}, false);
+	// 设置drop事件的事件侦听
+	dp.addEventListener("drop", function(evt) {
+		evt.preventDefault();
+		file_droped(evt);
+	}, false);
+}, false);
+
+/* -------------------------------------------------------------------
+* 文件被拖入时的处理
+* ----------------------------------------------------------------- */
+function file_droped(evt) {
+	// 清空显示区域
+	while( dp.firstChild ) {
+		dp.removeChild(dp.firstChild);
+	}
+	// 拖入文件的File接口对象
+	var file = evt.dataTransfer.files[0];
+	// FileReader接口对象
+	reader = new FileReader();
+	// 费图像文件画像时报错
+	if( ! /^image/.test(file.type) ) {
+		alert("请拖入图像文件。");
+	}
+	// 导入拖入图像
+	reader.readAsDataURL(file);
+	reader.onload = prepare_image;
+}
+
+/* -------------------------------------------------------------------
+* 显示拖入图像文件
+* ----------------------------------------------------------------- */
+function prepare_image(evt) {
+	// 创建img元素，显示拖入的图像
+	var image = document.createElement("img");
+	image.setAttribute("src", reader.result);
+	dp.appendChild(image);
+	// img元素中导入图像文档后进行后续处理
+	image.onload = function() {
+		// 获取图像的尺寸
+		var w = parseInt(image.width);
+		var h = parseInt(image.height);
+		// 创建canvas对象、导入图像
+		var canvas = document.createElement("canvas");
+		canvas.width = w;
+		canvas.height = h;
+		var ctx = canvas.getContext("2d");
+		ctx.drawImage(image, 0, 0);
+		// 取得canvas像素数据
+		var imagedata = ctx.getImageData(0, 0, w, h);
+		// 进行黑白转换
+		convert_image_to_gray_scale(imagedata.data);
+		// 替换canvas中的像素数据
+		ctx.putImageData(imagedata, 0, 0);
+		// 显示canvas
+		dp.appendChild(canvas);
+	}
+}
+
+/* -------------------------------------------------------------------
+* 黑白变换函数
+* ----------------------------------------------------------------- */
+function convert_image_to_gray_scale(data) {
+	var len = data.length;
+	var pixels = len / 4;
+	for( var i=0; i<pixels; i++ ) {
+		// 取出R, G, B值
+		var r = data[ i*4 ];
+		var g = data[ i*4 + 1 ];
+		var b = data[ i*4 + 2 ];
+		// 进行黑白变换
+		var g = parseInt( (11*r + 16*g + 5*b) / 32 );
+		// 将变换后的像素数据设置到原来数组元素中
+		data[ i*4 ] = g;
+		data[ i*4 + 1 ] = g;
+		data[ i*4 + 2 ] = g;
+	}
+}
+
+})();
+</script>
+</head>
+<body>
+<div id="dp">
+	<p>将桌面图像文件拖动到此处。</p>
+</div>
+</body></html>

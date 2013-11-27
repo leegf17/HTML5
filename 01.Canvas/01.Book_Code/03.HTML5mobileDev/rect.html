@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja"> <head><meta charset="UTF-8" />
+<title>绘制矩形</title>
+<style>
+canvas {
+	border:1px solid black;
+}
+</style>
+<script>
+(function () {
+/* -------------------------------------------------------------------
+* 页面导入时的处理
+* ----------------------------------------------------------------- */
+window.addEventListener("load", function() {
+	// canvas的2D上下文
+	var ctx = document.getElementById("sample").getContext("2d");
+	// 全部填充为绿色
+	ctx.fillStyle = "#005500";
+	ctx.fillRect(0, 0, 300, 150);
+	// 用红色绘制矩形的外框赤色で矩形の輪郭を描画
+	ctx.strokeStyle = "#ff6666";
+	ctx.strokeRect(30, 30, 240, 90);
+	// 中间掏空成一矩形
+	ctx.clearRect(50, 50, 200, 50);
+}, false);
+})();
+</script>
+</head>
+<body>
+<canvas id="sample" width="300" height="150"></canvas>
+</body></html>

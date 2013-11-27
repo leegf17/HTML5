@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh"> <head><meta charset="UTF-8" />
+<title>描绘文本</title>
+<style>
+canvas {
+	border:1px solid black;
+}
+</style>
+<script>
+(function () {
+/* -------------------------------------------------------------------
+* 页面导入时的事件处理
+* ----------------------------------------------------------------- */
+window.addEventListener("load", function() {
+	// canvas的2D上下文
+	var ctx = document.getElementById("sample").getContext("2d");
+	// 文本的定义
+	var text = "在Canvas中进行文本描绘";
+	// 定义文本的字型
+	ctx.font = "24px 'Arial'";
+	// 描绘文字的轮廓
+	ctx.strokeStyle = "blue";
+	ctx.strokeText(text, 10, 40);
+	// 描绘文字
+	ctx.fillStyle = "red";
+	ctx.fillText(text, 10, 85);
+	// 固定宽度
+	ctx.fillStyle = "green";
+	ctx.fillText(text, 10, 130, 150);
+}, false);
+})();
+</script>
+</head>
+<body>
+<canvas id="sample" width="300" height="150"></canvas>
+</body>
+</html>

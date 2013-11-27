@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"></head><body>
+<canvas id="canvas" width="300" height="300"></canvas>
+<script type="text/javascript">
+  // (1)取得绘图用的上下文
+  var canvas = document.getElementById("canvas");
+  var ctx = canvas.getContext("2d");
+  // (2)路径绘制开始
+  ctx.beginPath();
+  // (3)路径的绘制
+  ctx.moveTo(0,0);
+  ctx.lineTo(0,290);
+  ctx.lineTo(290,290);
+  // (4)路径绘制结束
+  ctx.closePath();
+  // (5)进行绘图处理
+  ctx.fillStyle = "rgb(200,0,0)";
+  ctx.fill();
+</script>
+</body></html>
